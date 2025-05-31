@@ -30,8 +30,9 @@ public class MealLog {
     private User user;
 
 
+
     private LocalDate date;
-    private String mealType; //breakfast, lunch, dinner, snack
+    private MealType mealType; //breakfast, lunch, dinner, snack
     private Boolean completed;
     private String photoUrl;
     private LocalDateTime createdAt;
