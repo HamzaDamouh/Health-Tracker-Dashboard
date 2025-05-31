@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 @layer base {
   :root {
@@ -61,10 +59,11 @@
 
 @layer base {
   * {
-    @apply border-border;
+    border-color: hsl(var(--border));
   }
   body {
-    @apply bg-background text-foreground;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
   }
 }
 
@@ -93,7 +92,12 @@
 
 /* Custom gradient backgrounds */
 .gradient-bg {
-  background: linear-gradient(135deg, rgb(15 23 42) 0%, rgb(88 28 135) 50%, rgb(15 23 42) 100%);
+  background: linear-gradient(
+    135deg,
+    rgb(15 23 42) 0%,
+    rgb(88 28 135) 50%,
+    rgb(15 23 42) 100%
+  );
 }
 
 /* Glass effect for cards */
@@ -117,4 +121,19 @@
 /* Progress bar custom styling */
 .progress-bar {
   background: linear-gradient(90deg, rgb(59 130 246), rgb(147 51 234));
+}
+
+/* Custom slider styles for dark mode */
+.dark [data-radix-slider-thumb] {
+  background: #1e293b;
+  border: 2px solid #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+
+.dark [data-radix-slider-range] {
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+}
+
+.dark [data-radix-slider-track] {
+  background: #334155;
 }
