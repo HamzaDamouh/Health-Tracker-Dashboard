@@ -2,66 +2,54 @@ package health.app.tracker.service;
 
 import health.app.tracker.dto.SleepLogRequest;
 import health.app.tracker.entity.SleepLog;
+import health.app.tracker.entity.User;
 import health.app.tracker.repository.SleepLogRepository;
+import health.app.tracker.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class SleepService {
 
-    private final SleepLogRepository repository;
+    private final SleepLogRepository sleepLogRepository;
+    private final UserRepository userRepository;
 
-    // For now, we assume userId = 1 (single user)
-    private static final Long DEFAULT_USER_ID = 1L;
-
-    public SleepService(SleepLogRepository repository) {
-        this.repository = repository;
+    public SleepService(SleepLogRepository sleepLogRepository, UserRepository userRepository) {
+        this.sleepLogRepository = sleepLogRepository;
+        this.userRepository = userRepository;
     }
 
-    public SleepLog logSleep(SleepLogRequest req) {
-        LocalDate today = LocalDate.now();
+    public SleepLog logSleep(SleepLogRequest request) {
+        User user = userRepository.findById(request.getUserId())
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        repository.findByUserIdAndDate(DEFAULT_USER_ID, today)
-                .ifPresent(log -> {
-                    throw new IllegalStateException("Sleep already logged for today.");
-                });
+        LocalTime bedtime = LocalTime.parse(request.getBedtime());
+        LocalTime wakeTime = LocalTime.parse(request.getWakeTime());
 
-        double duration = calculateSleepDuration(req.getBedtime(), req.getWakeTime());
+        double hours = Duration.between(bedtime, wakeTime).toMinutes() / 60.0;
+        if (hours < 0) hours += 24; // handle overnight sleep
 
         SleepLog log = SleepLog.builder()
-                .userId(DEFAULT_USER_ID)
-                .date(today)
-                .bedtime(req.getBedtime())
-                .wakeTime(req.getWakeTime())
-                .sleepDuration(duration)
-                .mood(req.getMood())
-                .energy(req.getEnergy())
-                .focus(req.getFocus())
-                .tags(req.getTags())
+                .user(user)
+                .date(LocalDate.now())
+                .bedtime(request.getBedtime())
+                .wakeTime(request.getWakeTime())
+                .sleepDuration(hours)
+                .mood(request.getMood())
+                .energy(request.getEnergy())
+                .focus(request.getFocus())
+                .tags(request.getTags())
                 .build();
 
-        return repository.save(log);
+        return sleepLogRepository.save(log);
     }
 
-    public SleepLog getTodaySleep() {
-        return repository.findByUserIdAndDate(DEFAULT_USER_ID, LocalDate.now())
-                .orElse(null);
-    }
-
-    private double calculateSleepDuration(String bedtime, String wakeTime) {
-        LocalTime bed = LocalTime.parse(bedtime);
-        LocalTime wake = LocalTime.parse(wakeTime);
-
-        Duration duration;
-        if (wake.isBefore(bed)) {
-            duration = Duration.between(bed, wake.plusHours(24));
-        } else {
-            duration = Duration.between(bed, wake);
-        }
-
-        return duration.toMinutes() / 60.0;
+    public Optional<SleepLog> getTodaySleep(UUID userId) {
+        return sleepLogRepository.findByUserIdAndDate(userId, LocalDate.now());
     }
 }

@@ -7,9 +7,10 @@ import health.app.tracker.utils.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/sleep")
-@CrossOrigin(origins = "http://localhost:3000") // Or use "*" during dev
 public class SleepController {
 
     private final SleepService sleepService;
@@ -20,13 +21,14 @@ public class SleepController {
 
     @PostMapping("/log")
     public ResponseEntity<ApiResponse<SleepLog>> logSleep(@RequestBody SleepLogRequest request) {
-        SleepLog saved = sleepService.logSleep(request);
-        return ResponseEntity.ok(ApiResponse.success(saved, "Sleep data logged successfully"));
+        SleepLog savedLog = sleepService.logSleep(request);
+        return ResponseEntity.ok(ApiResponse.success(savedLog, "Sleep data logged successfully"));
     }
 
     @GetMapping("/today")
-    public ResponseEntity<ApiResponse<SleepLog>> getTodaySleep() {
-        SleepLog sleep = sleepService.getTodaySleep();
-        return ResponseEntity.ok(ApiResponse.success(sleep, "Today's sleep data retrieved"));
+    public ResponseEntity<ApiResponse<SleepLog>> getTodaySleep(@RequestParam UUID userId) {
+        return sleepService.getTodaySleep(userId)
+                .map(log -> ResponseEntity.ok(ApiResponse.success(log, "Today's sleep retrieved")))
+                .orElse(ResponseEntity.ok(ApiResponse.success(null, "No sleep log for today")));
     }
 }
