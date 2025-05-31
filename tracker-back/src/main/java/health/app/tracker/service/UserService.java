@@ -22,7 +22,7 @@ public class UserService {
     }
 
     public Optional<User> getById(UUID id){
-        return userRepository.findById(id);
+        return Optional.ofNullable(userRepository.findById(id));
     }
 
     public Optional<User> getByEmail(String email) {

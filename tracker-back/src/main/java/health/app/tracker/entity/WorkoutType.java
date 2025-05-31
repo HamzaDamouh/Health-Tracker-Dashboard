@@ -1,4 +1,7 @@
 package health.app.tracker.entity;
 
-public class WorkoutType {
+public enum WorkoutType {
+    A,
+    B,
+    C
 }

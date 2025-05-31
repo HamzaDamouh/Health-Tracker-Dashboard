@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -25,8 +26,7 @@ public class SleepService {
     }
 
     public SleepLog logSleep(SleepLogRequest request) {
-        User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        User user = userRepository.findById(request.getUserId());
 
         LocalTime bedtime = LocalTime.parse(request.getBedtime());
         LocalTime wakeTime = LocalTime.parse(request.getWakeTime());
@@ -49,7 +49,8 @@ public class SleepService {
         return sleepLogRepository.save(log);
     }
 
-    public Optional<SleepLog> getTodaySleep(UUID userId) {
-        return sleepLogRepository.findByUserIdAndDate(userId, LocalDate.now());
+    public List<SleepLog> getUserSleepLogs(UUID userId, LocalDate start, LocalDate end) {
+        return sleepLogRepository.findByUserIdAndDateBetween(userId, start, end);
     }
+
 }

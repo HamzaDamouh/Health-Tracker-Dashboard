@@ -23,8 +23,6 @@ public class SleepLog {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
 
     @Column(nullable = false)
     private LocalDate date;
