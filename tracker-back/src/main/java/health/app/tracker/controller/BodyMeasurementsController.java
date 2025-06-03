@@ -20,13 +20,13 @@ public class BodyMeasurementsController {
 
     @PostMapping
     public ResponseEntity<ApiResponse<BodyMeasurements>> log(@RequestBody BodyMeasurementsRequest request) {
-        BodyMeasurements logged = service.logMeasurements("default_user", request);
+        BodyMeasurements logged = service.logMeasurements("hamza", request);
         return ResponseEntity.ok(ApiResponse.success(logged, "Measurements saved"));
     }
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<BodyMeasurements>>> getAll() {
-        List<BodyMeasurements> list = service.getHistory("default_user");
+        List<BodyMeasurements> list = service.getHistory("hamza");
         return ResponseEntity.ok(ApiResponse.success(list, "All measurements fetched"));
     }
 }

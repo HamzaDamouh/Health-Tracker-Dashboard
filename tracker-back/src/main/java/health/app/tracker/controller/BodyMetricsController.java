@@ -17,13 +17,13 @@ public class BodyMetricsController {
 
     @PostMapping("/daily")
     public ResponseEntity<ApiResponse<BodyMetrics>> logDailyMetrics(@RequestBody BodyMetricsRequest request) {
-        BodyMetrics metrics = bodyMetricsService.logDailyMetrics("default_user", request);
+        BodyMetrics metrics = bodyMetricsService.logDailyMetrics("hamza", request);
         return ResponseEntity.ok(ApiResponse.success(metrics, "Daily metrics logged"));
     }
 
     @GetMapping("/today")
     public ResponseEntity<ApiResponse<BodyMetrics>> getTodayMetrics() {
-        BodyMetrics metrics = bodyMetricsService.getTodayMetrics("default_user");
+        BodyMetrics metrics = bodyMetricsService.getTodayMetrics("hamza");
         return ResponseEntity.ok(ApiResponse.success(metrics, "Today's body metrics retrieved"));
     }
 }

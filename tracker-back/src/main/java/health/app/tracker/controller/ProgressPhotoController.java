@@ -26,13 +26,13 @@ public class ProgressPhotoController {
 
         String fileUrl = "/uploads/" + file.getOriginalFilename();
 
-        ProgressPhoto photo = service.uploadPhoto("default_user", type, fileUrl);
+        ProgressPhoto photo = service.uploadPhoto("hamza", type, fileUrl);
         return ResponseEntity.ok(ApiResponse.success(photo, "Progress photo uploaded"));
     }
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<ProgressPhoto>>> getAll() {
-        List<ProgressPhoto> photos = service.getAllPhotos("default_user");
+        List<ProgressPhoto> photos = service.getAllPhotos("hamza");
         return ResponseEntity.ok(ApiResponse.success(photos, "All progress photos"));
     }
 }

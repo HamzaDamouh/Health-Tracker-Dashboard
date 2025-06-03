@@ -19,19 +19,19 @@ public class MentalHealthLogController {
 
     @PostMapping("/checkin")
     public ResponseEntity<ApiResponse<MentalHealthLog>> logToday(@RequestBody MentalHealthRequest request) {
-        MentalHealthLog log = service.logToday("default_user", request);
+        MentalHealthLog log = service.logToday("hamza", request);
         return ResponseEntity.ok(ApiResponse.success(log, "Mental health check-in logged successfully"));
     }
 
     @GetMapping("/today")
     public ResponseEntity<ApiResponse<MentalHealthLog>> getToday() {
-        MentalHealthLog today = service.getToday("default_user");
+        MentalHealthLog today = service.getToday("hamza");
         return ResponseEntity.ok(ApiResponse.success(today, "Today's mental data"));
     }
 
     @GetMapping("/week")
     public ResponseEntity<ApiResponse<List<MentalHealthLog>>> getWeek() {
-        List<MentalHealthLog> logs = service.getLast7Days("default_user");
+        List<MentalHealthLog> logs = service.getLast7Days("hamza");
         return ResponseEntity.ok(ApiResponse.success(logs, "Week of mental health logs"));
     }
 }
